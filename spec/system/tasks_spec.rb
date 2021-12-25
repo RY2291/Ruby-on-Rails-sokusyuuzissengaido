@@ -13,13 +13,15 @@ describe "タスク管理機能" do
     click_button "ログインする"
   end
 
+  shared_examples_for "ユーザーAが作成したタスクが表示される" do
+    it { expect(page).to have_content "最初のタスク"}
+  end
+
   describe "一覧表示機能" do
     context "ユーザーAがログインしている時" do
       let(:login_user) { user_a }
 
-      it "ユーザーAが作成したタスクが表示される" do
-        expect(page).to have_content "最初のタスク"
-      end
+      it_behaves_like "ユーザーAが作成したタスクが表示される"
     end
 
     context "ユーザーBがログインしている時" do
@@ -39,8 +41,34 @@ describe "タスク管理機能" do
         visit tasks_path(task_a)
       end
 
-      it "ユーザーAが作成したタスクが表示される" do
-        expect(page).to have_content "最初のタスク"
+      it_behaves_like "ユーザーAが作成したタスクが表示される"
+    end
+  end
+
+  describe "新規作成の機能" do
+    let(:login_user) { user_a }
+    let(:task_name) { "新規作成のテストを書く"}
+
+    before do
+      visit new_task_path
+      fill_in "名称", with: task_name
+      click_button "登録する"
+    end
+
+    context "新規作成画面で名称を入力した時" do
+
+      it "入力が成功した時" do
+        expect(page).to have_selector ".alert-sucess", text: "新規作成のテストを書く"
+      end
+    end
+
+    context "新規作成画面で名称を入力しなかった時" do
+      let(:task_name) { '' }
+
+      it "エラーになる" do
+        within "#text" do
+          expect(page).to have_content "名称を入力してください"
+        end
       end
     end
   end
