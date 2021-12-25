@@ -17,4 +17,13 @@ class Task < ApplicationRecord
   #   self.name = "名前なし" if name.blank?
   # end
 
+
+  def self.ransackable_attributes(auth_objrct = nil)
+    %w[name created_at]
+  end
+
+  def self.ransackable_associtations(auth_objrct = nil)
+    []
+  end
+
 end
