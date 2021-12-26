@@ -72,3 +72,5 @@ gem "bootstrap"
 gem "rails-i18n"
 
 gem "ransack"
+
+gem "sidekiq", "~> 5.0"
